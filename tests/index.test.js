@@ -14,43 +14,35 @@ let authJWT = 'i';
 describe('NodeJS Tests', () => {
   describe('POST /subscribe', () => {
     test('Should create a new account (200)', async () => {
-      const res = await chai
-        .request(server)
-        .post('/subscribe')
-        .send({
-          email: 'node@test.com',
-          firstName: 'node',
-          lastName: 'test',
-          password: 'n0d3jst3s!',
-        });
+      const res = await chai.request(server).post('/subscribe').send({
+        email: 'node@test.com',
+        firstName: 'node',
+        lastName: 'test',
+        password: 'n0d3jst3s!',
+      });
+      console.log(res.body);
 
       expect(res.status).toEqual(200);
       expect(res.body.data).toBeDefined();
     });
     test('Should fail because email already exists (400)', async () => {
-      const res = await chai
-        .request(server)
-        .post('/subscribe')
-        .send({
-          email: 'node@test.com',
-          firstName: 'node',
-          lastName: 'test',
-          password: 'n0d3jst3s!',
-        });
+      const res = await chai.request(server).post('/subscribe').send({
+        email: 'node@test.com',
+        firstName: 'node',
+        lastName: 'test',
+        password: 'n0d3jst3s!',
+      });
 
       expect(res.status).toEqual(400);
       expect(res.body.error).toBeDefined();
     });
     test('Should create a new friend account (200)', async () => {
-      const res = await chai
-        .request(server)
-        .post('/subscribe')
-        .send({
-          email: 'friend@test.com',
-          firstName: 'friend',
-          lastName: 'test',
-          password: 'n0d3jst3s!',
-        });
+      const res = await chai.request(server).post('/subscribe').send({
+        email: 'friend@test.com',
+        firstName: 'friend',
+        lastName: 'test',
+        password: 'n0d3jst3s!',
+      });
 
       expect(res.status).toEqual(200);
       expect(res.body.data).toBeDefined();
@@ -88,10 +80,7 @@ describe('NodeJS Tests', () => {
     });
 
     test('Should return one user (200)', async () => {
-      const res = await chai
-        .request(server)
-        .get('/users')
-        .auth(authJWT, { type: 'bearer' });
+      const res = await chai.request(server).get('/users').auth(authJWT, { type: 'bearer' });
 
       expect(res.status).toEqual(200);
       expect(res.body.data).toBeDefined();
@@ -113,10 +102,7 @@ describe('NodeJS Tests', () => {
     });
 
     test('Should return an empty array of groups (200)', async () => {
-      const res = await chai
-        .request(server)
-        .get('/groups')
-        .auth(authJWT, { type: 'bearer' });
+      const res = await chai.request(server).get('/groups').auth(authJWT, { type: 'bearer' });
 
       expect(res.status).toEqual(200);
       expect(res.body.data).toBeDefined();
@@ -126,10 +112,7 @@ describe('NodeJS Tests', () => {
 
   describe('POST /groups', () => {
     test('Should fail because not logged in (401)', async () => {
-      const res = await chai
-        .request(server)
-        .post('/groups')
-        .send({ name: 'My Awesome Group' });
+      const res = await chai.request(server).post('/groups').send({ name: 'My Awesome Group' });
 
       expect(res.status).toEqual(401);
       expect(res.body.error).toBeDefined();
@@ -159,10 +142,7 @@ describe('NodeJS Tests', () => {
   });
   describe('POST /groups/{groupId}/invite', () => {
     test('Should fail because not logged in (401)', async () => {
-      const res = await chai
-        .request(server)
-        .post('/groups')
-        .send({ email: 'friend@test.com' });
+      const res = await chai.request(server).post('/groups').send({ email: 'friend@test.com' });
 
       expect(res.status).toEqual(401);
       expect(res.body.error).toBeDefined();

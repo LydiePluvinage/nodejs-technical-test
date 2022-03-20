@@ -12,8 +12,10 @@ class ErrorHandler extends Error {
 function handleError(err, _req, res, next) {
   const { statusCode = 500, message } = err;
   res.status(statusCode).json({
-    status: 'error',
-    statusCode,
+    error: {
+      status: 'error',
+      statusCode,
+    },
   });
   // for DEV purposes, console.log or store error in a file or sends an email to developers
   console.log(message);
