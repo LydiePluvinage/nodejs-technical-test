@@ -1,12 +1,22 @@
-const http = require('http');
+const express = require('express');
+const setupRoutes = require('./router');
+const { handleError } = require('./helpers/errors');
+require('dotenv').config();
 
-const PORT = process.env.PORT || 8080;
+const server = express();
+const PORT = process.env.PORT || 3000;
 
-const server = http.createServer((req, res) => {
-  console.log('Received an api call on', req.url)
-  res.writeHead(404, { 'Content-Type': 'application/json' })
-  res.end('{ "error": "Not implemented" }')
-}).listen(PORT)
-console.log('Server running at http://127.0.0.1:' + PORT)
+// Allows express to read requests body
+server.use(express.json());
 
-module.exports = server
+// setup routes
+setupRoutes(server);
+
+// Error managment
+server.use(handleError);
+
+server.listen(PORT, () => {
+  console.log('Server running at http://127.0.0.1:' + PORT);
+});
+
+module.exports = server;
