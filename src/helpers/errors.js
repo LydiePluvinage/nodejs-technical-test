@@ -11,7 +11,6 @@ class ErrorHandler extends Error {
 // eslint-disable-next-line no-unused-vars
 function handleError(err, _req, res, next) {
   const { statusCode = 500, message } = err;
-
   res.status(statusCode).json({
     status: 'error',
     statusCode,
