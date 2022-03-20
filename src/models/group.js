@@ -8,4 +8,20 @@ async function findAll() {
     .then(([results]) => results);
 }
 
-module.exports = { findAll };
+// add a new group in the database
+async function addGroup(group) {
+  return connection
+    .promise()
+    .query('INSERT INTO userGroups (name) VALUES (?)', [group.name])
+    .then(([results]) => results.insertId);
+}
+
+// gets group name and its users
+async function findOne(groupId) {
+  return connection
+    .promise()
+    .query('SELECT g.name FROM userGroups WHERE idGroup= ?', [groupId])
+    .then(([results]) => results);
+}
+
+module.exports = { findAll, addGroup, findOne };

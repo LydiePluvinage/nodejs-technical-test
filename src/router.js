@@ -11,6 +11,8 @@ const setupRoutes = (server) => {
   server.get('/users', authController.checkAuthorization, usersController.findAll);
   // displays list of groups
   server.get('/groups', authController.checkAuthorization, groupsController.findAll);
+  // create a new group and add authentified user to it
+  server.post('/groups', authController.checkAuthorization, groupsController.add);
 };
 
 module.exports = setupRoutes;
