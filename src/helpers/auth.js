@@ -9,7 +9,6 @@ const calculateToken = (email = '') => {
 
 // get authorization information
 const checkAuthorization = (req, res, next) => {
-  console.log(req.headers);
   if (!req.headers.authorization || req.headers.authorization.split(' ')[0] !== 'Bearer') {
     next(new ErrorHandler(401, 'Unauthorized user, please login'));
   } else {
