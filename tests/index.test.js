@@ -20,7 +20,6 @@ describe('NodeJS Tests', () => {
         lastName: 'test',
         password: 'n0d3jst3s!',
       });
-      console.log(res.body);
 
       expect(res.status).toEqual(200);
       expect(res.body.data).toBeDefined();
@@ -155,11 +154,11 @@ describe('NodeJS Tests', () => {
         .request(server)
         .post('/groups/1/invite')
         .auth(authJWT, { type: 'bearer' })
-        .send({ email: 'frient@test.com' });
+        .send({ email: 'friend@test.com' }); // wrong email address
 
       expect(res.status).toEqual(200);
       expect(res.body.data).toBeDefined();
-      expect(res.body.data.groups.length).toEqual(2);
+      expect(res.body.data.groups[0].users.length).toEqual(2); // Wrong test. One group but two users it
       expect(res.body.data.groups[0]).toMatchObject({
         name: 'My Awesome Group',
         users: [

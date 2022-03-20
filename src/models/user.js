@@ -29,4 +29,33 @@ async function findAll(email) {
     .then(([results]) => results);
 }
 
-module.exports = { getUserByEmail, addUser, findAll };
+// gets users from group
+async function getUsersByGroup(groupId) {
+  return connection
+    .promise()
+    .query(
+      `SELECT u.email, u.firstName, u.lastName 
+           FROM users u
+           INNER JOIN users_has_groups ug
+           ON ug.idUser = u.idUser
+           AND ug.idGroup = ?`,
+      [groupId]
+    )
+    .then(([results]) => results);
+}
+
+// adds a user in a group
+async function addUserInGroup(groupId, userEmail) {
+  return connection
+    .promise()
+    .query(
+      `INSERT INTO users_has_groups (idGroup, idUser) 
+      SELECT ?, idUser FROM users where email = ?`,
+      [groupId, userEmail]
+    )
+    .then(() => {
+      return getUsersByGroup(groupId).then((results) => results);
+    });
+}
+
+module.exports = { getUserByEmail, addUser, findAll, getUsersByGroup, addUserInGroup };
