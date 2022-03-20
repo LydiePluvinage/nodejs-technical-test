@@ -1,7 +1,7 @@
 const { getUserByEmail, addUser } = require('../models/user');
 const { ErrorHandler } = require('../helpers/errors');
 
-const emailIsFree = async (req, _res, next) => {
+async function emailIsFree(req, _res, next) {
   try {
     // get email from req.body
     const user = req.body;
@@ -17,9 +17,9 @@ const emailIsFree = async (req, _res, next) => {
   } catch (err) {
     next(new ErrorHandler(500, err.message));
   }
-};
+}
 
-const subscribe = async (req, res, next) => {
+async function subscribe(req, res, next) {
   try {
     const user = req.body;
     // Post the new user in the database
@@ -36,6 +36,6 @@ const subscribe = async (req, res, next) => {
   } catch (err) {
     next(new ErrorHandler(500, err.message));
   }
-};
+}
 
 module.exports = { emailIsFree, subscribe };

@@ -1,6 +1,6 @@
 const connection = require('../db-config');
 
-const getUserByEmail = (email) => {
+function getUserByEmail(email) {
   return connection
     .promise()
     .query(
@@ -8,9 +8,9 @@ const getUserByEmail = (email) => {
       [email]
     )
     .then(([results]) => results[0]);
-};
+}
 
-const addUser = async (user) => {
+async function addUser(user) {
   return connection
     .promise()
     .query(
@@ -18,6 +18,6 @@ const addUser = async (user) => {
       [user.firstName, user.lastName, user.email, user.password]
     )
     .then(([results]) => results.insertId);
-};
+}
 
 module.exports = { getUserByEmail, addUser };
