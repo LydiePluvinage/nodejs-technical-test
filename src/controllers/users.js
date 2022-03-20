@@ -1,4 +1,4 @@
-const { getUserByEmail, addUser } = require('../models/user');
+const userModel = require('../models/user');
 const { calculateToken } = require('../helpers/auth');
 const { ErrorHandler } = require('../helpers/errors');
 
@@ -8,7 +8,7 @@ async function emailIsFree(req, _res, next) {
     // get email from req.body
     const user = req.body;
     // Checks if email already belongs to a registered user
-    const userExists = await getUserByEmail(user.email);
+    const userExists = await userModel.getUserByEmail(user.email);
     // If email isn't free = Send an error
     if (userExists) {
       next(new ErrorHandler(400, `This user already exists`));
@@ -26,12 +26,14 @@ async function subscribe(req, res, next) {
   try {
     const user = req.body;
     // Post the new user in the database
-    const userCreated = await addUser(user);
+    const userCreated = await userModel.addUser(user);
     if (userCreated) {
       res.status(200).json({
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
+        data: {
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+        },
       });
     } else {
       next(new ErrorHandler(500));
@@ -47,7 +49,7 @@ async function emailExists(req, _res, next) {
     // get email from req.body
     const user = req.body;
     // Checks if email already belongs to a registered user
-    const userExists = await getUserByEmail(user.email);
+    const userExists = await userModel.getUserByEmail(user.email);
     // If email doesn't exist, send an error message
     if (!userExists) {
       next(new ErrorHandler(400, `This user doesn't exist`));
@@ -65,18 +67,30 @@ async function login(req, res, next) {
   try {
     const { email, password } = req.body;
     // gets user information from his email
-    const user = await getUserByEmail(email);
+    const user = await userModel.getUserByEmail(email);
     if (password != user.password) {
       // passwords don't match, send an authentification error
       throw new ErrorHandler(401, 'Wrong email/password information');
     } else {
       // calculate token from email
       const token = calculateToken(email);
-      res.status(200).json({ authJWT: token });
+      res.status(200).json({ data: { authJWT: token } });
     }
   } catch (err) {
     next(new ErrorHandler(err.statusCode, err.message));
   }
 }
 
-module.exports = { emailIsFree, subscribe, emailExists, login };
+// gets all users information MINUS the one asking
+async function findAll(req, res, next) {
+  try {
+    const { email } = req.userInfo;
+    // gets user information from his email
+    const users = await userModel.findAll(email);
+    res.status(200).json({ data: { users: users } });
+  } catch (err) {
+    next(new ErrorHandler(err.statusCode, err.message));
+  }
+}
+
+module.exports = { emailIsFree, subscribe, emailExists, login, findAll };
