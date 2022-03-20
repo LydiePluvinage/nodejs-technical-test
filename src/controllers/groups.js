@@ -31,4 +31,17 @@ async function add(req, res, next) {
   }
 }
 
-module.exports = { findAll, add };
+// add a user in an already created group
+async function addUserInGroup(req, res, next) {
+  try {
+    const { groupId } = req.params;
+    // Group has been created. Add the user in it and send back the list of users
+    const usersInGroup = await userModel.addUserInGroup(groupId, req.body.email);
+    const group = await groupModel.findOne(groupId);
+    res.status(200).json({ data: { groups: [{ name: group.name, users: [...usersInGroup] }] } });
+  } catch (err) {
+    next(new ErrorHandler(500, err.message));
+  }
+}
+
+module.exports = { findAll, add, addUserInGroup };
