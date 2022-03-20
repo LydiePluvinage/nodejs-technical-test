@@ -20,8 +20,8 @@ async function addGroup(group) {
 async function findOne(groupId) {
   return connection
     .promise()
-    .query('SELECT g.name FROM userGroups WHERE idGroup= ?', [groupId])
-    .then(([results]) => results);
+    .query('SELECT name FROM userGroups WHERE idGroup= ?', [groupId])
+    .then(([results]) => results[0]);
 }
 
 module.exports = { findAll, addGroup, findOne };
